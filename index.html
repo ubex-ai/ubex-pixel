@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>UBEX counter</title>
+</head>
+<body>
+    <script>
+        (function (w, d, n, u, s) {
+            w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)};
+            var a=d.createElement(s),m=d.getElementsByTagName(s)[0];
+            a.async=true;a.src=u;m.parentNode.insertBefore(a,m);
+        })(window, document, 'ubx', './dist/pixel.js', 'script');
+        ubx('createCounter', 'UBX-123456');
+    </script>
+</body>
+</html>
