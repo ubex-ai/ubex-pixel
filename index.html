@@ -8,13 +8,21 @@
     <title>UBEX counter</title>
 </head>
 <body>
+    <h1 style="font-family: Arial, Roboto">ubex pixel</h1>
+    <pre id="logout"></pre>
+    <!-- UBEX Pixel start -->
     <script>
         (function (w, d, n, u, s) {
+            var t = "", possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            for (var i = 0; i < 10; i++)
+                t += possible.charAt(Math.floor(Math.random() * possible.length));
             w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)};
             var a=d.createElement(s),m=d.getElementsByTagName(s)[0];
-            a.async=true;a.src=u;m.parentNode.insertBefore(a,m);
-        })(window, document, 'ubx', './dist/pixel.js', 'script');
+            a.async=true;a.src=u + '?' + t;m.parentNode.insertBefore(a,m);
+        })(window, document, 'ubx', '//static.ubex.io/pixel.js', 'script');
         ubx('createCounter', 'UBX-123456');
     </script>
+    <div><img src="//pixel.ubex.io/pixel.gif?c=UBX-123456" style="position:absolute; left:-9999px;" alt="" /></div>
+    <!-- UBEX Pixel end -->
 </body>
 </html>

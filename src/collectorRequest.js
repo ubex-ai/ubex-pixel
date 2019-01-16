@@ -7,31 +7,22 @@
  */
 
 function CollectorRequest(apiURL) {
+    const pixelImage = new Image();
     function encodeParams(params) {
         return Object.keys(params).map(function (k) {
             return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
         }).join('&');
     }
 
-    function sendRequest(url, params, method = 'GET', body = null) {
-        return new Promise(function (resolve, reject) {
-            // check XMLHttpRequest support onload. if not, that is IE8,9, and use XDomainRequest.
-            var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
-            var xhr = new XHR();
-            xhr.open(method, `//${url}?${encodeParams(params)}`, true);
-            xhr.send(body);
-            xhr.onload = function (arg) {
-                resolve(this, arg);
-            };
-            xhr.onerror = function (arg) {
-                reject(this, arg);
-            }
-        });
+    function imageRequest(apiURL, params){
+        document.getElementsByTagName('body')[0].appendChild(pixelImage);
+        pixelImage.src = '//' + apiURL + `?${encodeParams(params)}`;
+        pixelImage.style.width = 0;
+        pixelImage.style.height = 0;
     }
 
     return {
-        getPixel: function (params) {
-            return sendRequest(apiURL, params);
+        imageRequest: function (params) {            return imageRequest(apiURL + '/pixel.gif', params);
         },
         sendAction: function (type, label, value) {
             return sendRequest(apiURL, {type, label, value});

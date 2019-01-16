@@ -1,6 +1,7 @@
 'use strict';
 
 import Fingerprint2 from 'fingerprintjs2';
+import Promise from 'promise-polyfill';
 
 function FingerprintWrapper(options) {
     if (!Fingerprint2) {
@@ -15,7 +16,11 @@ function FingerprintWrapper(options) {
     function getComponents() {
         return new Promise(function (resolve, reject) {
             try {
-                Fingerprint2.get(function (components) {
+                Fingerprint2.get({
+                    excludes: {
+                        'pixelRatio': false
+                    }
+                }, function (components) {
                     resolve(components);
                 });
             } catch (e) {
@@ -46,19 +51,20 @@ function FingerprintWrapper(options) {
      */
     function generateParamsFromComponents(components) {
         const fc = {};
-        components.filter(c => requiredComponents.indexOf(c.key) >= 0)
+        components.filter(c => Object.keys(requiredComponents).indexOf(c.key) >= 0)
             .forEach((c) => {
                 switch (c.key) {
                     case 'touchSupport':
-                        fc[c.key] = c.value[0] > 0;
+                        fc[requiredComponents[c.key]] = c.value[0] > 0;
                         break;
                     case 'availableScreenResolution':
-                        fc[c.key] = c.value[0] + 'x' + c.value[1];
+                        fc[requiredComponents[c.key]] = c.value[0] + 'x' + c.value[1];
                         break;
-                    case 'cpuClass' && c.value === 'not available':
-                        fc[c.key] = '';
+                    case 'doNotTrack':
+                        fc[requiredComponents[c.key]] = c.value >= 1;
+                        break;
                     default:
-                        fc[c.key] = c.value;
+                        fc[requiredComponents[c.key]] = c.value;
                         break;
                 }
             });
@@ -67,7 +73,7 @@ function FingerprintWrapper(options) {
     }
 
     function getWindowResolution() {
-        return window.innerHeight + 'x' + window.innerHeight;
+        return window.innerHeight + 'x' + window.innerWidth;
     }
 
     return {

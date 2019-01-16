@@ -9,17 +9,16 @@ import FingerprintWrapper from './fingerprintWrapper';
     const collectorRequest = new CollectorRequest(UBEX_URL);
     const cookieHelper = new CookieHelper();
     const fw = new FingerprintWrapper({
-        requiredComponents: [
-            'language',
-            'colorDepth',
-            'deviceMemory',
-            'availableScreenResolution',
-            'timezoneOffset',
-            'cpuClass',
-            'platform',
-            'adBlock',
-            'touchSupport'
-        ]
+        requiredComponents: {
+            'language': 'lng',
+            'availableScreenResolution': 'asr',
+            'timezoneOffset': 'tzo',
+            'platform': 'p',
+            'adBlock': 'ab',
+            'touchSupport': 'ts',
+            'pixelRatio': 'pr',
+            'doNotTrack': 'dnt'
+        }
     });
 
     let hash = cookieHelper.read(COOKIE_NAME);
@@ -37,13 +36,17 @@ import FingerprintWrapper from './fingerprintWrapper';
                 hash = fw.generateHashFromComponents(components);
                 cookieHelper.create(COOKIE_NAME, hash);
             }
-            return collectorRequest.getPixel({
+            const sendingParams = {
                 fid: hash,
                 cid: window.ubx && window.ubx.q && window.ubx.q[0] && window.ubx.q[0][1],
                 uri: window.location.href,
-                title: document.title,
+                tl: document.title,
                 ...fw.generateParamsFromComponents(components)
-            });
+            };
+            if(typeof DEBUG !== 'undefined' && DEBUG) {
+                document.getElementById('logout').innerText = JSON.stringify(sendingParams, null, '\t');
+            }
+            return collectorRequest.imageRequest(sendingParams);
         }).then(function (response, arg) {
             console.log('Pixel successfully loaded');
         }).catch(function (e) {

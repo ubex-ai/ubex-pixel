@@ -8,7 +8,7 @@ describe('FingerprintWrapper', () => {
     it('should return FP component', async () => {
         components = await fingerprintWrapper.getComponents();
         expect(components).to.be.an('array');
-        expect(components).to.have.lengthOf(28);
+        expect(components).to.have.lengthOf(32);
     });
 
     it('should generate hash string from given array of components', () => {
